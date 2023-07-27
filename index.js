@@ -16,7 +16,7 @@ db.once("open", function () {
   console.log(`Mongodb Connected`);
 });
 
-const hostname = "127.0.0.1";
+const hostname = process.env.IP_DEV;
 const port = process.env.PORT;
 
 const app = express();
@@ -26,6 +26,7 @@ app.use(errorHandler);
 
 app.use("/api/city", require("./routes/cities"));
 app.use("/api/user", require("./routes/user"));
+app.use("/api/property_type", require("./routes/proptype"));
 
 app.listen(port, hostname, () => {
   console.log(`Server running at http://${hostname}:${port}/`);
