@@ -1,9 +1,12 @@
-const errorHandler = require("./middleware/errorHandler");
-
 const express = require("express");
 const mongoose = require("mongoose");
 var cors = require("cors");
+const bodyParser = require("body-parser");
+const multer = require("multer");
+const path = require("path");
 const dotenv = require("dotenv").config();
+// const fileUpload = require("express-fileupload");
+const errorHandler = require("./middleware/errorHandler");
 
 mongoose.connect("mongodb://0.0.0.0:27017/brokerx", {
   useNewUrlParser: true,
@@ -21,12 +24,36 @@ const port = process.env.PORT;
 
 const app = express();
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 app.use(errorHandler);
+// app.use(fileUpload({ createParentPath: true }));
 
 app.use("/api/city", require("./routes/cities"));
-app.use("/api/user", require("./routes/user"));
+// app.use("/api/user", require("./routes/user"));
 app.use("/api/property_type", require("./routes/proptype"));
+
+// static images
+// app.use("/api/image_property", require("./routes/images"));
+var storage = multer.diskStorage({
+  destination: function (request, file, callback) {
+      callback(null, './uploads/');
+  },
+  filename: function (request, file, callback) {
+      console.log("file",file);
+      callback(null, file.originalname)
+  }
+});
+
+var upload = multer({ storage: storage });
+
+app.post('/api/image_property', upload.single('photo'), function (req, res) {
+
+  // console.log(req.body) // form fields
+  console.log(req.file) // form files
+  res.status(204).end()
+});
 
 app.listen(port, hostname, () => {
   console.log(`Server running at http://${hostname}:${port}/`);
