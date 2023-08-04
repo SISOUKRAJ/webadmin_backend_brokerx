@@ -14,7 +14,7 @@ const {
 // router.use(validateToken)
 // const uploads = multer({ dest: __dirname + "/../assets/images/property/" });
 
-// router.route("/", uploads.array("file")).post(createImages);
+router.route("/").post(createImages);
 // router.route("/:id").get(getOneImages);
 
 module.exports = router;

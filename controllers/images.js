@@ -20,30 +20,23 @@ const createImages = asyncHandler(async (req, res) => {
 
   const file = req.body;
   // console.log("file", file);
-  //   res.status(200).json({ massage: upload });
+  const files = req.files;
+  // console.log("files", files);
 
-  // if (!upload || Object.keys(upload).length === 0) {
-  //   return res.status(400).send("No files were uploaded.");
-  // }
+  sampleFile = files.images;
+  console.log("sampleFile", sampleFile);
 
-  // The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file
-  sampleFile = await file;
-  // const nameItem = await sampleFile.map((index) => {
-  //   uploadPath = __dirname + "/assets/images/property/" + index.name;
-  //   return uploadPath;
-  // });
-  // console.log("nameItem", nameItem);
+  const images = await sampleFile.map((index) => {
+    const uploadPath = "../upload/" + index.name;
 
-  uploadPath = __dirname + "/../assets/images/property" + sampleFile.name;
-  console.log("uploadPath", uploadPath);
-    // Use the mv() method to place the file somewhere on your server
-  sampleFile.mv(uploadPath, function (err) {
-    if (err) return res.status(500).send(err);
+    // const result = index.mv(uploadPath, function (err) {
+    //   if (err) return res.status(500).send(err);
 
-    // res.send("File uploaded!");
-    res.status(200).json({ massage: "File uploaded!" });
+    //   res.send("File uploaded!");
+    // });
+    return uploadPath;
   });
-  // res.json({ massage: "xxx" });
+  console.log("images", images);
 });
 
 module.exports = {
