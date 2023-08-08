@@ -1,11 +1,11 @@
-const errorHandler = require("./middleware/errorHandler");
-
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const fileUpload = require("express-fileupload");
 const dotenv = require("dotenv").config();
+
+const errorHandler = require("./middleware/errorHandler");
 
 const app = express();
 

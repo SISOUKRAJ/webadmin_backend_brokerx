@@ -1,4 +1,5 @@
 const asyncHandler = require("express-async-handler");
+const path = require("path");
 
 //@desc  Get One cities
 //@router  Get One /api/cities
@@ -15,28 +16,34 @@ const getOneImages = asyncHandler(async (req, res) => {
 //@router Create /api/cities
 //@access private
 const createImages = asyncHandler(async (req, res) => {
-  let sampleFile;
-  let uploadPath;
+  let imagesFile;
+  let fileName;
 
-  const file = req.body;
+  // const file = req.body;
   // console.log("file", file);
   const files = req.files;
   // console.log("files", files);
 
-  sampleFile = files.images;
-  console.log("sampleFile", sampleFile);
+  imagesFile = files.images;
+  console.log("imagesFile", imagesFile);
 
-  const images = await sampleFile.map((index) => {
-    const uploadPath = "../upload/" + index.name;
-
-    // const result = index.mv(uploadPath, function (err) {
-    //   if (err) return res.status(500).send(err);
-
-    //   res.send("File uploaded!");
+  Object.keys(files).forEach((key) => {
+    const filepath = path.join(__dirname, "files", files[key].name);
+    console.log("filepath", filepath);
+    fileName.push(filepath)
+    // files[key].mv(filepath, (err) => {
+    //   if (err) return res.status(500).json({ status: "error", message: err });
     // });
-    return uploadPath;
   });
-  console.log("images", images);
+
+  const properVerb = imagesFile.length > 1 ? "are" : "is";
+  const sentence =
+    `Upload ${imagesFile.toString()} ${properVerb} success.`.replaceAll(
+      ",",
+      ", "
+    );
+
+  res.status(200).json({ message: sentence });
 });
 
 module.exports = {
