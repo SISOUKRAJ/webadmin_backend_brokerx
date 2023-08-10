@@ -29,19 +29,15 @@ app.use(fileUpload({ createParentPath: true }));
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-// support parsing of application/json type post data
 app.use(bodyParser.json());
-//support parsing of application/x-www-form-urlencoded post data
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(errorHandler);
 
 // static images
 app.use('/img', express.static(__dirname + "./assets/images/property"))
-
 // Routes
-app.use(errorHandler);
-
 app.use("/api/city", require("./routes/cities"));
-// app.use("/api/user", require("./routes/user"));
+app.use("/api/user", require("./routes/user"));
 app.use("/api/property_type", require("./routes/proptype"));
 
 // static images

@@ -3,7 +3,7 @@ const router = express.Router();
 // const multer = require("multer");
 const fileExtlimiter = require("../middleware/image/fileExtLimiter");
 const fileSizeLimiter = require("../middleware/image/fileSizeLiniter");
-const filesPayLoadExists = require("../middleware/image/filesPayLoadExists");
+// const filesPayLoadExists = require("../middleware/image/filesPayLoadExists");
 
 const {
   //   getimages,

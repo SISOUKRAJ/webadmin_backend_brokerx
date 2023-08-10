@@ -17,7 +17,7 @@ const getOneImages = asyncHandler(async (req, res) => {
 //@access private
 const createImages = asyncHandler(async (req, res) => {
   let imagesFile;
-  let fileName;
+  let fileName = [];
 
   // const file = req.body;
   // console.log("file", file);
@@ -25,25 +25,36 @@ const createImages = asyncHandler(async (req, res) => {
   // console.log("files", files);
 
   imagesFile = files.images;
-  console.log("imagesFile", imagesFile);
+  // console.log("imagesFile", imagesFile);
 
-  Object.keys(files).forEach((key) => {
-    const filepath = path.join(__dirname, "files", files[key].name);
-    console.log("filepath", filepath);
-    fileName.push(filepath)
-    // files[key].mv(filepath, (err) => {
-    //   if (err) return res.status(500).json({ status: "error", message: err });
-    // });
+  Object.keys(imagesFile).forEach((key) => {
+    const filepath = path.join(
+      __dirname,
+      "../assets/images/property",
+      imagesFile[key].name
+    );
+    // console.log("filepath", filepath);
+    imagesFile[key].mv(filepath, (err) => {
+      if (err) return res.status(500).json({ status: "error", message: err });
+    });
   });
 
   const properVerb = imagesFile.length > 1 ? "are" : "is";
-  const sentence =
-    `Upload ${imagesFile.toString()} ${properVerb} success.`.replaceAll(
-      ",",
-      ", "
-    );
+  const proper = imagesFile.length > 1 ? "these" : "this";
 
-  res.status(200).json({ message: sentence });
+  // const sentence =
+  //   `Upload ${imagesFile.toString()} ${properVerb} success.`.replaceAll(
+  //     ",",
+  //     ", "
+  //   );
+
+  Object.keys(imagesFile).forEach((key) => {
+    fileName.push(imagesFile[key].name);
+  });
+
+  const sentence = `Upload ${proper} ${fileName.toString()} ${properVerb} success.`.replaceAll(",", ", ");
+
+  res.status(200).json({ status: "Success", message: sentence });
 });
 
 module.exports = {

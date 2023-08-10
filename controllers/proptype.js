@@ -34,7 +34,7 @@ const create = asyncHandler(async (req, res) => {
     type_name,
   });
 
-  res.status(201).json(data);
+  res.status(200).json(data);
 });
 //@desc Update All cities
 //@router Update /api/cities
