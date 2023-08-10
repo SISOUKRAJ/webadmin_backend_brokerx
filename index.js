@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const path = require("path");
 const bodyParser = require("body-parser");
 const fileUpload = require("express-fileupload");
 const dotenv = require("dotenv").config();
@@ -33,15 +34,17 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(errorHandler);
 
+// images path
+const images_prop_path = path.join(__dirname, "./assets/images/property");
+// console.log("filepath", images_prop_path);
 // static images
-app.use('/img', express.static(__dirname + "./assets/images/property"))
+app.use("/images/property", express.static(images_prop_path));
+// Images Upload
+app.use("/api/image_property", require("./routes/images"));
 // Routes
 app.use("/api/city", require("./routes/cities"));
 app.use("/api/user", require("./routes/user"));
 app.use("/api/property_type", require("./routes/proptype"));
-
-// static images
-app.use("/api/image_property", require("./routes/images"));
 
 app.listen(port, hostname, () => {
   console.log(`Server running at http://${hostname}:${port}/`);

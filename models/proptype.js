@@ -1,10 +1,9 @@
 const mongoose = require("mongoose");
 
-const CitySchema = new mongoose.Schema(
+const PropTypeSchema = new mongoose.Schema(
   {
     type_name: {
       type: String,
-      required: [true, "Please add the city name"],
     },
   },
   {
@@ -12,4 +11,4 @@ const CitySchema = new mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model("Property_types", CitySchema);
+module.exports = mongoose.model("Property_types", PropTypeSchema);
