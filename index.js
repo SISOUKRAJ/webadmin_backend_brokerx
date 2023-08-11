@@ -45,6 +45,8 @@ app.use("/api/image_property", require("./routes/images"));
 app.use("/api/city", require("./routes/cities"));
 app.use("/api/user", require("./routes/user"));
 app.use("/api/property_type", require("./routes/proptype"));
+app.use("/api/property", require("./routes/properties"));
+
 
 app.listen(port, hostname, () => {
   console.log(`Server running at http://${hostname}:${port}/`);

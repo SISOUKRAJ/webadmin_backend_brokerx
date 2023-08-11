@@ -1,74 +1,106 @@
 const asyncHandler = require("express-async-handler");
-const PropTypeSchema = require("../models/proptype");
+const PropertySchema = require("../models/property");
+const path = require("path");
 
-//@desc Get All cities
-//@router Get /api/cities
+//@desc Get All property
+//@router Get /api/property
 //@access private
 const getAll = asyncHandler(async (req, res) => {
-  const cities = await PropTypeSchema.find();
-  res.status(200).json(cities);
+  const property = await PropertySchema.find().populate("city property_type");
+  res.status(200).json(property);
 });
-//@desc  Get One All cities
-//@router  Get One /api/cities
+//@desc  Get One All property
+//@router  Get One /api/property
 //@access private
 const getOne = asyncHandler(async (req, res) => {
-  const cities = await PropTypeSchema.findById(req.params.id);
-  if (!cities) {
+  const property = await PropertySchema.findById(req.params.id);
+  if (!property) {
     res.status(404);
-    throw new Error("City not Found");
+    throw new Error("property not Found");
   }
-  res.status(200).json(cities);
+  res.status(200).json(property);
 });
-//@desc Create All cities
-//@router Create /api/cities
+//@desc Create All property
+//@router Create /api/property
 //@access private
 const create = asyncHandler(async (req, res) => {
   //   console.log("Body", req.body);
-  const { type_name } = req.body;
-  if (!type_name) {
-    res.status(400);
-    throw new Error("All Field are mandatory!");
-  }
+  const body = req.body;
+  // console.log("body", body);
+  const files = req.files;
+  // console.log("files", files);
+  // if (!type_name) {
+  //   res.status(400);
+  //   throw new Error("All Field are mandatory!");
+  // }
 
-  const data = await PropTypeSchema.create({
-    type_name,
+  const { gallery } = req.files;
+
+  const fileName = [];
+
+  Object.keys(gallery).forEach((key) => {
+    const filepath = path.join(
+      __dirname,
+      "../assets/images/property",
+      gallery[key].name
+    );
+    console.log("filepath", filepath);
+    fileName.push(gallery[key].name);
+    gallery[key].mv(filepath, (err) => {
+      if (err) return res.status(500).json({ status: "error", message: err });
+    });
+  });
+  // console.log("fileName", fileName);
+
+  const galleryName = fileName.map((index) => {
+    return {
+      name: index,
+    };
   });
 
-  res.status(201).json(data);
+  // console.log("galleryName", galleryName);
+
+  const data = await PropertySchema.create({
+    ...body,
+    gallery: galleryName,
+  });
+
+  res.status(200).json(data);
+  // res.status(200).json({ message: "sucess" });
 });
-//@desc Update All cities
-//@router Update /api/cities
+//@desc Update All property
+//@router Update /api/property
 //@access private
 const update = asyncHandler(async (req, res) => {
-  const cities = await PropTypeSchema.findById(req.params.id);
-  if (!cities) {
+  const property = await PropertySchema.findById(req.params.id);
+  if (!property) {
     res.status(404);
-    throw new Error("City not Found");
+    throw new Error("property not Found");
   }
-  const updateCity = await PropTypeSchema.findByIdAndUpdate(
+  const updateproperty = await PropertySchema.findByIdAndUpdate(
     req.params.id,
     req.body,
     {
       new: true,
     }
   );
-  res.status(200).json(updateCity);
+  res.status(200).json(updateproperty);
 });
-//@desc Delete All cities
-//@router Delete /api/cities
+//@desc Delete All property
+//@router Delete /api/property
 //@access private
 const deleteOne = asyncHandler(async (req, res) => {
-  const cities = await PropTypeSchema.findById(req.params.id);
-  if (!cities) {
+  const property = await PropertySchema.findById(req.params.id);
+  if (!property) {
     res.status(404);
-    throw new Error("City not Found");
+    throw new Error("property not Found");
   }
 
-  const deleteCity = await PropTypeSchema.findByIdAndRemove(req.params.id, {
+  const deleteproperty = await PropertySchema.findByIdAndRemove(req.params.id, {
     new: true,
   });
 
-  res.status(200).json(deleteCity);
+  res.status(200).json(deleteproperty);
 });
 
 module.exports = {
