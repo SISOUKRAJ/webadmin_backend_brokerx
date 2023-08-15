@@ -9,17 +9,19 @@ const getAll = asyncHandler(async (req, res) => {
   const property = await PropertySchema.find().populate("city property_type");
   res.status(200).json(property);
 });
+
 //@desc  Get One All property
 //@router  Get One /api/property
 //@access private
 const getOne = asyncHandler(async (req, res) => {
-  const property = await PropertySchema.findById(req.params.id);
+  const property = await PropertySchema.find().populate("city property_type");
   if (!property) {
     res.status(404);
     throw new Error("property not Found");
   }
   res.status(200).json(property);
 });
+
 //@desc Create All property
 //@router Create /api/property
 //@access private
@@ -35,7 +37,6 @@ const create = asyncHandler(async (req, res) => {
   // }
 
   const { gallery } = req.files;
-
   const fileName = [];
 
   Object.keys(gallery).forEach((key) => {
@@ -51,32 +52,37 @@ const create = asyncHandler(async (req, res) => {
     });
   });
   // console.log("fileName", fileName);
-
   const galleryName = fileName.map((index) => {
     return {
       name: index,
     };
   });
-
   // console.log("galleryName", galleryName);
-
   const data = await PropertySchema.create({
     ...body,
     gallery: galleryName,
   });
-
   res.status(200).json(data);
   // res.status(200).json({ message: "sucess" });
 });
+
 //@desc Update All property
 //@router Update /api/property
 //@access private
 const update = asyncHandler(async (req, res) => {
+  // console.log("req.params.id", req.params.id);
   const property = await PropertySchema.findById(req.params.id);
+  // console.log("property", property);
+
   if (!property) {
     res.status(404);
     throw new Error("property not Found");
   }
+
+  const body = req.body;
+  console.log("body", body);
+  const files = req.files;
+  console.log("files", files);
   const updateproperty = await PropertySchema.findByIdAndUpdate(
     req.params.id,
     req.body,
@@ -85,6 +91,7 @@ const update = asyncHandler(async (req, res) => {
     }
   );
   res.status(200).json(updateproperty);
+  // res.status(200).json({ message: "sucess" });
 });
 //@desc Delete All property
 //@router Delete /api/property
